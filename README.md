@@ -1,9 +1,8 @@
 # RIP-AV: Joint Representative Instance Pre-training and Context Aware Network for Retinal Artery/Vein Segmentation 
 
 - Contribution
-  1) we introduce a novel deep learning framework, named RIP-AV, is the first attempt to joint local patch with its context in the retinal A/V segmentation.
-  2) we design a representative instance learning strategy to learn latent arteriovenous feature. 
-  3) we Design two novel moudules Distance Aware and Patch Context Fusion to the relationship of vascular patch and its context.  
-  4) Validated against three datasets, outperforming state-of-the-art methods.    
+  (1) The first attempt to joint the Representative Instance Pre-training (RIP) with the contextual analysis of local patch for retinal A/V segmentation.
+  (2) The RIP task is proposed to learn latent A/V features from diverse spatial regions. 
+  (3) Distance Aware and Patch Context Fusion modules are desgined to explore the relationship of patch and its context base on the sense of vascular structures.
+  (4) Validated against three datasets, outperforming state-of-the-art methods.    
 
-test3333
