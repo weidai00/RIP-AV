@@ -10,7 +10,11 @@
 >
 > :arrow_forward:<em>Validated against three datasets, outperforming state-of-the-art methods. </em>
 
-<img align='center' src='fig/Fig_1_v10_300dpi.png' height=80% width=80%/>
+
+<div style="text-align: center">
+  <img src='fig/Fig_1_v10_300dpi.png'/>
+</div>
+
 
 ## &#x1F527; Usage
 
@@ -116,7 +120,7 @@ where the hyper-parameters ${{\lambda }_{a}}$, ${{\lambda }_{s}}$, ${{\lambda }_
 
 #### :rainbow: Segmentation Performance
 
-<img align='center' src='fig/DRIVE_LES_HRF_combine_vis_text_enlarge_v3.png' height=80% width=80%/>
+<img align='center' src='fig/DRIVE_LES_HRF_combine_vis_text_enlarge_v3.png' />
 
 Full prediction results can be available at [AV-DRIVE](https://drive.google.com/drive/folders/1sKliquaxXwesrzlWAsXP5xjNaWpJXAuL?usp=sharing), [LES-AV](https://drive.google.com/drive/folders/1djAWENC-T7C7sCk9UjR0qZG18XuFyrTl?usp=sharing), [HRF](https://drive.google.com/drive/folders/1f3_5LjwGZRaDp4sOEZyQoyzHvolJFkIN?usp=sharing).
 
