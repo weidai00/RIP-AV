@@ -68,9 +68,8 @@ python train.py
 ```
 
 
-$$
-{{\mathcal{L}}_{RIP}}=-\frac{1}{N}\sum\limits_{i=1}^{N}{\sum\limits_{j=1}^{C}{\left[ {{y}_{ij}}\cdot \log (m({{p}_{i}}))+(1-{{y}_{ij}})\cdot \log (1-m({{p}_{i}})) \right]}}
-$$
+
+![RIP_loss](./fig/RIP-loss.png)
 
 
 | Dataset  | Pretrain weight                                              |
@@ -105,23 +104,7 @@ python test_with_vis.py
 
 ```
 
-$$
-{{\mathcal{L}}_{da}}(DA({{f}_{d}}),S(y))=\frac{1}{\sum\limits_{i=1}^{N}{y}}\sum\limits_{j=1}^{N}{\frac{1}{S({{y}_{j}})+\varepsilon }}\cdot smoot{{h}_{{{L}_{1}}}}(DA({{f}_{dj}}),S({{y}_{j}})) \\
-smoot{{h}_{{{L}_{1}}}}(x,y)=\left\{ \begin{array}{*{35}{l}}
-   0.5{{(x-y)}^{2}}, & \text{if }|x-y|<0  \\
-   |x-y|-0.5, & \text{otherwise }  \\
-\end{array} \right.
-$$
-
-$$
-\mathcal{L}_{adv}^{D}={{\mathbb{E}}_{x,y}}\left[ -y\log (1-D(x,G(x))) \right]+{{\mathbb{E}}_{x,y}}\left[ -y\log (D(x,y)) \right]\\
-\mathcal{L}_{adv}^{G}={{\mathbb{E}}_{x,y}}\left[ -y\log D(x,G(x)) \right]\\
-{{\mathcal{L}}_{s}}=\sum\limits_{i=1}^{3}{{{\beta }_{i}}({{\mathcal{L}}_{bce}}(G(x),y)+{{\mathcal{L}}_{dice}}(G(x),y)})\\
-\begin{align}
-  & {{\mathcal{L}}_{G}}={{\lambda }_{a}}\mathcal{L}_{adv}^{G}+{{\lambda }_{s}}{{\mathcal{L}}_{s}}+{{\lambda }_{d}}{{\mathcal{L}}_{da}} \\ 
- & {{\mathcal{L}}_{D}}={{\lambda }_{a}}\mathcal{L}_{adv}^{D} \\ 
-\end{align}
-$$
+![AV-loss](./fig/AV-loss.png)
 
 where the hyper-parameters ${{\lambda }_{a}}$, ${{\lambda }_{s}}$, ${{\lambda }_{d}}$ are meticulously calibrated to balance these three losses and set as 0.01, 5 and 1, respectively, see `./AV/config/config_train_general.py`.
 
