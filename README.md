@@ -74,9 +74,9 @@ python train.py
 
 | Dataset  | Pretrain weight                                              |
 | -------- | ------------------------------------------------------------ |
-| AV-DRIVE | [RIP_pretrain_drive](https://drive.google.com/file/d/1ofz2WNXCVfpjXGvoGzneS5PVb7mAhcIG/view?usp=sharing) |
-| LES-AV   | [RIP_pretrain_les](https://drive.google.com/file/d/1EB0ZKa3-9yCq9_RgcfFaU7Ut3SPLdXya/view?usp=sharing) |
-| HRF      | [RIP_pretrain_hrf](https://drive.google.com/file/d/1eyqpM0p5hmBhk1jze782UxLtETYuCNg6/view?usp=sharing) |
+| AV-DRIVE <img width=300/>| [RIP_pretrain_drive](https://drive.google.com/file/d/1ofz2WNXCVfpjXGvoGzneS5PVb7mAhcIG/view?usp=sharing) <img width=300/>|
+| LES-AV   <img width=300/>| [RIP_pretrain_les](https://drive.google.com/file/d/1EB0ZKa3-9yCq9_RgcfFaU7Ut3SPLdXya/view?usp=sharing) <img width=300/>|
+| HRF      <img width=300/>| [RIP_pretrain_hrf](https://drive.google.com/file/d/1eyqpM0p5hmBhk1jze782UxLtETYuCNg6/view?usp=sharing) <img width=300/>|
 
 #### :rainbow: Tsne visualization results (W/O RIP)
 
@@ -108,11 +108,11 @@ python test_with_vis.py
 
 where the hyper-parameters ${{\lambda }_{a}}$, ${{\lambda }_{s}}$, ${{\lambda }_{d}}$ are meticulously calibrated to balance these three losses and set as 0.01, 5 and 1, respectively, see `./AV/config/config_train_general.py`.
 
-| Dataset  | checkpoint                                                   |
+| Dataset   <img width=300/>| checkpoint                                                    <img width=300/>|
 | -------- | ------------------------------------------------------------ |
-| AV-DRIVE | [RIP_checkpoint_drive](https://drive.google.com/file/d/1AUtWDTS6LutsHpB_hHfopUFqEDa-JUnT/view?usp=sharing) |
-| LES-AV   | [RIP_checkpoint_les](https://drive.google.com/file/d/1iFWqhxsnOH3h-j1CKJ7NPL_AmdM7lTjm/view?usp=sharing) |
-| HRF      | [RIP_checkpoint_hrf](https://drive.google.com/file/d/1a21dNW92n-YAACtL_blJHcwkSshKSABC/view?usp=sharing) |
+| AV-DRIVE  <img width=300/>| [RIP_checkpoint_drive](https://drive.google.com/file/d/1AUtWDTS6LutsHpB_hHfopUFqEDa-JUnT/view?usp=sharing)  <img width=300/>|
+| LES-AV    <img width=300/>| [RIP_checkpoint_les](https://drive.google.com/file/d/1iFWqhxsnOH3h-j1CKJ7NPL_AmdM7lTjm/view?usp=sharing)  <img width=300/>|
+| HRF       <img width=300/>| [RIP_checkpoint_hrf](https://drive.google.com/file/d/1a21dNW92n-YAACtL_blJHcwkSshKSABC/view?usp=sharing)  <img width=300/>|
 
 #### :rainbow: Segmentation Performance
 
