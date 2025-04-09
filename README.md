@@ -1,5 +1,6 @@
 ## RIP-AV: Joint Representative Instance Pre-training and Context Aware Network for Retinal Artery/Vein Segmentation
 
+## ⏰:Update: the visulation tools about RIP-AV is online in 🤠:huggingface [https://huggingface.co/spaces/weidai00/RIP-AV-su-lab](https://huggingface.co/spaces/weidai00/RIP-AV-su-lab)
 > ### :o: Contribution:
 >
 > :arrow_forward:<em>The first attempt to joint the <b>Representative Instance Pre-training</b> (RIP) with the contextual analysis of local patch for <b>retinal A/V segmentation</b>.</em>
@@ -127,6 +128,6 @@ Full prediction results can be available at [AV-DRIVE](https://drive.google.com/
 ### :memo:To-Do List
 
 - [x] training and test code
-- [ ] visualization demo
-- [ ] test on more retinal dataset
+- [x] visualization demo
+- [x] test on more retinal dataset
 
