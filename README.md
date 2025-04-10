@@ -38,7 +38,12 @@ Conda environment settings:
  poetry install
  pip install tensorflow==2.9.1
  pip install torch==1.13.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117 --force
- ```
+```
+If you encounted `numpy` error during runing the project:
+```
+ pip install numpy==2.2.4
+ pip install scikit-image=0.25.2 
+```
 
 ## :rocket: Preparing Segmentation Datasets
 
