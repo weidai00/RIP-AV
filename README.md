@@ -135,4 +135,5 @@ Full prediction results can be available at [AV-DRIVE](https://drive.google.com/
 - [x] training and test code
 - [x] visualization demo
 - [x] test on more retinal dataset
+- [ ] train and test on more UWF and ROP dataset
 
