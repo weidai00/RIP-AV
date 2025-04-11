@@ -594,8 +594,8 @@ class PGFusion(nn.Module):
         self.softmax = nn.Softmax(dim=2)
         self.softmax_concat = nn.Softmax(dim=0)
 
-        # self.gamma_patch_self = nn.Parameter(torch.zeros(1))
-        # self.gamma_patch_global = nn.Parameter(torch.zeros(1))
+        self.gamma_patch_self = nn.Parameter(torch.zeros(1))
+        self.gamma_patch_global = nn.Parameter(torch.zeros(1))
 
         self.init_parameters()
 
@@ -633,16 +633,16 @@ class PGFusion(nn.Module):
         patch_self_sim_map = patch_self_sim_map @ patch_value
         patch_self_sim_map = patch_self_sim_map.view(patch_self_sim_map.size(0), patch_self_sim_map.size(1),
                                                      *patch_rep.size()[2:])
-        # patch_self_sim_map = self.gamma_patch_self * patch_self_sim_map
-        patch_self_sim_map = 1 * patch_self_sim_map
+        patch_self_sim_map = self.gamma_patch_self * patch_self_sim_map
+        # patch_self_sim_map = 1 * patch_self_sim_map
         ### patch global attention
         patch_global_sim_map = patch_global_query @ global_key.transpose(-2, -1) / math.sqrt(dim_k)
         patch_global_sim_map = self.softmax(patch_global_sim_map)
         patch_global_sim_map = patch_global_sim_map @ global_value
         patch_global_sim_map = patch_global_sim_map.view(patch_global_sim_map.size(0), patch_global_sim_map.size(1),
                                                          *patch_rep.size()[2:])
-        # patch_global_sim_map = self.gamma_patch_global * patch_global_sim_map
-        patch_global_sim_map = 1 * patch_global_sim_map
+        patch_global_sim_map = self.gamma_patch_global * patch_global_sim_map
+        # patch_global_sim_map = 1 * patch_global_sim_map
 
         fusion_sim_weight_map = torch.cat((patch_self_sim_map, patch_global_sim_map), dim=1)
         fusion_sim_weight_map = self.fusion(fusion_sim_weight_map)
