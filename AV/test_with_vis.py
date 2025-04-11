@@ -44,7 +44,7 @@ def modelEvalution_out(i,net,savePath, use_cuda=False, dataset='DRIVE', is_kill_
 
     n_classes = 3
     Net = PGNet(resnet=config.use_network,use_global_semantic=True, input_ch=input_ch, num_classes= n_classes, use_cuda=use_cuda, pretrained=False, centerness=config.use_centerness, centerness_map_size=config.centerness_map_size)
-    Net.load_state_dict(net)
+    Net.load_state_dict(net,strict=False)
 
     if use_cuda:
         Net.cuda()
