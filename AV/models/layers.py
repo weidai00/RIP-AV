@@ -594,8 +594,8 @@ class PGFusion(nn.Module):
         self.softmax = nn.Softmax(dim=2)
         self.softmax_concat = nn.Softmax(dim=0)
 
-        self.gamma_patch_self = nn.Parameter(torch.zeros(1))
-        self.gamma_patch_global = nn.Parameter(torch.zeros(1))
+        self.gamma_patch_self = nn.Parameter(torch.ones(1))
+        self.gamma_patch_global = nn.Parameter(torch.ones(1))
 
         self.init_parameters()
 
