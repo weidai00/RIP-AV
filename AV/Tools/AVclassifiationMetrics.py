@@ -138,6 +138,163 @@ def AVclassifiation(out_path, PredAll1, PredAll2, VesselPredAll, DataSet=0, imag
         ArteryProb = PredAll1[ImgNumber, 0, :, :]
         VeinProb = PredAll2[ImgNumber, 0, :, :]
 
+        VesselSeg = (VesselProb >= 0.1) & ((ArteryProb >0.2) | (VeinProb > 0.2))
+        # VesselSeg = (VesselProb >= 0.5) & ((ArteryProb >= 0.5) | (VeinProb >= 0.5))
+        crossSeg = (VesselProb >= 0.1) & ((ArteryProb >= 0.6) & (VeinProb >= 0.6))
+        VesselSeg = binaryPostProcessing3(VesselSeg, removeArea=100, fillArea=20)
+
+        vesselPixels = np.where(VesselSeg > 0)
+
+        ArteryProb2 = np.zeros((height, width))
+        VeinProb2 = np.zeros((height, width))
+        crossProb2 = np.zeros((height, width))
+        image_color = np.zeros((3, height, width), dtype=np.uint8)
+        for i in range(len(vesselPixels[0])):
+            row = vesselPixels[0][i]
+            col = vesselPixels[1][i]
+            probA = ArteryProb[row, col]
+            probV = VeinProb[row, col]
+            #probA,probV = softmax([probA,probV])
+            ArteryProb2[row, col] = probA
+            VeinProb2[row, col] = probV
+
+        test_use_vessel = np.zeros((height, width), np.uint8)
+        ArteryPred2 = ((ArteryProb2 >= 0.2) & (ArteryProb2 >= VeinProb2))
+        VeinPred2 = ((VeinProb2 >= 0.2) & (VeinProb2 >= ArteryProb2))
+
+        ArteryPred2 = binaryPostProcessing3(ArteryPred2, removeArea=100, fillArea=20)
+        VeinPred2 = binaryPostProcessing3(VeinPred2, removeArea=100, fillArea=20)
+
+        image_color[0, :, :] = ArteryPred2 * 255
+        image_color[2, :, :] = VeinPred2 * 255
+        image_color = image_color.transpose((1, 2, 0))
+
+        #Image.fromarray(image_color).save(os.path.join(out_path, f'{image_basename[ImgNumber].split(".")[0]}_ori.png'))
+
+        imgBin_vessel = ArteryPred2 + VeinPred2
+        imgBin_vessel[imgBin_vessel[:, :] == 2] = 1
+        test_use_vessel = imgBin_vessel.copy() * 255
+
+        vessel = cal_crosspoint(test_use_vessel)
+
+        contours_vessel, hierarchy_c = cv2.findContours(vessel, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+        # inter continuity
+        for vessel_seg in range(len(contours_vessel)):
+            C_vessel = np.zeros(vessel.shape, np.uint8)
+            C_vessel = cv2.drawContours(C_vessel, contours_vessel, vessel_seg, (255, 255, 255), cv2.FILLED)
+            cli = np.mean(VeinProb2[C_vessel == 255]) / np.mean(ArteryProb2[C_vessel == 255])
+            if cli < 1:
+                image_color[
+                    (C_vessel[:, :] == 255) & (test_use_vessel[:, :] == 255)] = [255, 0, 0]
+            else:
+                image_color[
+                    (C_vessel[:, :] == 255) & (test_use_vessel[:, :] == 255)] = [0, 0, 255]
+        loop=0
+        while loop<2:
+            # out vein continuity
+            vein = image_color[:, :, 2]
+            contours_vein, hierarchy_b = cv2.findContours(vein, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+            vein_size = []
+            for z in range(len(contours_vein)):
+                vein_size.append(contours_vein[z].size)
+            vein_size = np.sort(np.array(vein_size))
+            # image_color_copy = np.uint8(image_color).copy()
+            for vein_seg in range(len(contours_vein)):
+                judge_number = min(np.mean(vein_size),500)
+                # cv2.putText(image_color_copy, str(vein_seg), (int(contours_vein[vein_seg][0][0][0]), int(contours_vein[vein_seg][0][0][1])), 3, 1,
+                #             color=(255, 0, 0), thickness=2)
+                if contours_vein[vein_seg].size < judge_number:
+                    C_vein = np.zeros(vessel.shape, np.uint8)
+                    C_vein = cv2.drawContours(C_vein, contours_vein, vein_seg, (255, 255, 255), cv2.FILLED)
+                    max_diameter = np.max(Skeleton(C_vein, C_vein)[1])
+
+                    image_color_copy_vein = image_color[:, :, 2].copy()
+                    image_color_copy_arter = image_color[:, :, 0].copy()
+                    # a_ori = cv2.drawContours(a_ori, contours_b, k, (0, 0, 0), cv2.FILLED)
+                    image_color_copy_vein = cv2.drawContours(image_color_copy_vein, contours_vein, vein_seg,
+                                                             (0, 0, 0),
+                                                             cv2.FILLED)
+                    # image_color[(C_cross[:, :] == 255) & (image_color[:, :, 1] == 255)] = [255, 0, 0]
+                    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (
+                        4 * int(np.ceil(max_diameter)), 4 * int(np.ceil(max_diameter))))
+                    C_vein_dilate = cv2.dilate(C_vein, kernel, iterations=1)
+                    # cv2.imwrite(path_out_3, C_vein_dilate)
+                    C_vein_dilate_judge = np.zeros(vessel.shape, np.uint8)
+                    C_vein_dilate_judge[
+                        (C_vein_dilate[:, :] == 255) & (image_color_copy_vein == 255)] = 1
+                    C_arter_dilate_judge = np.zeros(vessel.shape, np.uint8)
+                    C_arter_dilate_judge[
+                        (C_vein_dilate[:, :] == 255) & (image_color_copy_arter == 255)] = 1
+                    if (len(np.unique(C_vein_dilate_judge)) == 1) & (
+                            len(np.unique(C_arter_dilate_judge)) != 1) & (np.mean(VeinProb2[C_vein == 255]) < 0.6):
+                        image_color[
+                            (C_vein[:, :] == 255) & (image_color[:, :, 2] == 255)] = [255, 0,
+                                                                                      0]
+
+            # out artery continuity
+            arter = image_color[:, :, 0]
+            contours_arter, hierarchy_a = cv2.findContours(arter, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            arter_size = []
+            for z in range(len(contours_arter)):
+                arter_size.append(contours_arter[z].size)
+            arter_size = np.sort(np.array(arter_size))
+            for arter_seg in range(len(contours_arter)):
+                judge_number = min(np.mean(arter_size),500)
+
+                if contours_arter[arter_seg].size < judge_number:
+
+                    C_arter = np.zeros(vessel.shape, np.uint8)
+                    C_arter = cv2.drawContours(C_arter, contours_arter, arter_seg, (255, 255, 255), cv2.FILLED)
+                    max_diameter = np.max(Skeleton(C_arter, test_use_vessel)[1])
+
+                    image_color_copy_vein = image_color[:, :, 2].copy()
+                    image_color_copy_arter = image_color[:, :, 0].copy()
+                    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (
+                        4 * int(np.ceil(max_diameter)), 4 * int(np.ceil(max_diameter))))
+                    image_color_copy_arter = cv2.drawContours(image_color_copy_arter, contours_arter, arter_seg,
+                                                              (0, 0, 0),
+                                                              cv2.FILLED)
+                    C_arter_dilate = cv2.dilate(C_arter, kernel, iterations=1)
+                    # image_color[(C_cross[:, :] == 255) & (image_color[:, :, 1] == 255)] = [255, 0, 0]
+                    C_arter_dilate_judge = np.zeros(arter.shape, np.uint8)
+                    C_arter_dilate_judge[
+                        (C_arter_dilate[:, :] == 255) & (image_color_copy_arter[:, :] == 255)] = 1
+                    C_vein_dilate_judge = np.zeros(arter.shape, np.uint8)
+                    C_vein_dilate_judge[
+                        (C_arter_dilate[:, :] == 255) & (image_color_copy_vein[:, :] == 255)] = 1
+
+                    if (len(np.unique(C_arter_dilate_judge)) == 1) & (
+                            len(np.unique(C_vein_dilate_judge)) != 1) & (np.mean(ArteryProb2[C_arter == 255]) < 0.6):
+                        image_color[
+                            (C_arter[:, :] == 255) & (image_color[:, :, 0] == 255)] = [0,
+                                                                                       0,
+                                                                                       255]
+            loop=loop+1
+        
+        Image.fromarray(image_color).save(os.path.join(out_path, f'{image_basename[ImgNumber].split(".")[0]}.png'))
+
+def AVclassifiation_old(out_path, PredAll1, PredAll2, VesselPredAll, DataSet=0, image_basename=''):
+    """
+    predAll1: predition results of artery
+    predAll2: predition results of vein
+    VesselPredAll: predition results of vessel
+    DataSet: the length of dataset
+    image_basename: the name of saved mask
+    """
+
+    ImgN = DataSet
+
+    for ImgNumber in range(ImgN):
+
+        height, width = PredAll1.shape[2:4]
+
+        VesselProb = VesselPredAll[ImgNumber, 0, :, :]
+
+        ArteryProb = PredAll1[ImgNumber, 0, :, :]
+        VeinProb = PredAll2[ImgNumber, 0, :, :]
+
         VesselSeg = (VesselProb >= 0.1) & ((ArteryProb >= 0.2) | (VeinProb >= 0.2))
         # VesselSeg = (VesselProb >= 0.5) & ((ArteryProb >= 0.5) | (VeinProb >= 0.5))
         crossSeg = (VesselProb >= 0.1) & ((ArteryProb >= 0.6) & (VeinProb >= 0.6))
