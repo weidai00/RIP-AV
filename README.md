@@ -44,7 +44,7 @@ Conda environment settings:
 ```
 If you encounted `numpy` error during runing the project:
 ```
- pip install numpy==2.2.4
+pip install numpy==1.26.4 --force-reinstall
  pip install scikit-image==0.25.2 
 ```
 If you encounted `xxxxx/site-packages/tensorlayer/layers.py  line 33, in <module> TF_GRAPHKEYS_VARIABLES = tf.GraphKeys.VARIABLES AttributeError: module 'tensorflow' has no attribute 'GraphKeys'` error during runing the project:
