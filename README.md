@@ -45,7 +45,12 @@ Conda environment settings:
 If you encounted `numpy` error during runing the project:
 ```
  pip install numpy==2.2.4
- pip install scikit-image=0.25.2 
+ pip install scikit-image==0.25.2 
+```
+If you encounted `xxxxx/site-packages/tensorlayer/layers.py  line 33, in <module> TF_GRAPHKEYS_VARIABLES = tf.GraphKeys.VARIABLES AttributeError: module 'tensorflow' has no attribute 'GraphKeys'` error during runing the project:
+```
+ vim  xxxxx/site-packages/tensorlayer/layers.py
+ replace import tensorflow as tf to  import tensorflow.compat.vl as tf
 ```
 
 ## :rocket: Preparing Segmentation Datasets
